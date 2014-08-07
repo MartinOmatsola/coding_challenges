@@ -1,3 +1,5 @@
+import sys
+
 def longestWordFromChars(wrds, chars):
 	charMap = {}
 	for char in chars:
@@ -61,7 +63,54 @@ def mergesort(lst):
 	else:
 		return lst
 		
-
+def addUpTo100(lst):
+	map = {}
+	for i in lst:
+		if map.has_key(i):
+			map[i] += 1
+		else:
+			map[i] = 1
+		
+	ret = []
+	for k in lst:
+		if k == 50: 
+			if map[50] > 1:
+				ret.append((50, 50))
+				map[50] -= 2
+		elif map.has_key(100 - k) and map[100 - k] > 0 and map[k] > 0:
+			ret.append((k, 100 - k))
+			map[k] -= 1
+			map[100 - k] -= 1
+	return ret
+	
+def printInStringOrder(ubound):
+	def inner(pfx, ubound):
+		if int(pfx) > ubound: return
+		for i in range(10):
+			s = pfx + str(i)
+			if int(s) <= ubound:
+				sys.stdout.write(s + ", ")
+				inner(s, ubound)
+			
+	for i in range(1, 10):
+		sys.stdout.write(str(i) + ", ")
+		inner(str(i), ubound)
+		
+def getLongestCommonPrefix(s1, s2):
+	n = len(s2)
+	pfx = ""
+	while n >= 0:
+		pfx = s2[0:n]
+		if pfx == s1[0:n]: break
+		n -= 1
+	return pfx
+	
+def getLongestCommonPrefixInSentence(s):
+	words = sorted(s.split(" "))
+	candidate = words[0]
+	for i in range(1, len(words)):
+		candidate = getLongestCommonPrefix(words[i], candidate)
+	return candidate
 	
 	
 if __name__ == "__main__":
@@ -69,5 +118,12 @@ if __name__ == "__main__":
 	#chars = ["a", "n", "c", "b"]
 	#print(longestWordFromChars(wrds, chars))
 	
-	lst = [1 ,10, 11, 23, 4, -1, 67, 100]
-	print(mergesort(lst))
+	#lst = [1 ,10, 11, 23, 4, -1, 67, 100, 0, 25, 75, -1, 101, 50, 50, 50]
+	#print(mergesort(lst))
+	
+	#print addUpTo100(lst)
+	
+	#printInStringOrder(1000)
+	
+	print getLongestCommonPrefixInSentence("abcd abcdef abcdxxx abcdeee")
+	
