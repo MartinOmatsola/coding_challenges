@@ -64,3 +64,35 @@ def post_order_print(node):
 		post_order_print(node.right)
 
 	print node.value
+
+def find_duplicate_keys(node, seen=None):
+	if seen is None:
+		seen = {}
+	
+	if not node.value in seen:
+		seen[node.value] = 0
+
+	seen[node.value] += 1
+
+	if node.left:
+		find_duplicate_keys(node.left, seen)
+	
+	if node.right:
+		find_duplicate_keys(node.right, seen)
+
+	k1 = None
+	v1 = 0
+	for k, v in seen.iteritems():
+		if v > v1:
+			k1 = k
+			v1 = v
+	return k1
+
+if __name__ == '__main__':
+	n1 = Node(5, None, None)
+	n3 = Node(11, None, None)
+	n2 = Node(10, None, n3)
+	root = Node(5, n1, n2)
+
+	print find_duplicate_keys(root)
+
