@@ -111,6 +111,14 @@ def getLongestCommonPrefixInSentence(s):
 	for i in range(1, len(words)):
 		candidate = getLongestCommonPrefix(words[i], candidate)
 	return candidate
+
+def lehmerRandomNumber(seed, a, c, m):
+	yield seed
+	while True:
+		num = ((a * seed) + c) % m
+		yield num
+		seed = num
+
 	
 	
 if __name__ == "__main__":
@@ -125,5 +133,12 @@ if __name__ == "__main__":
 	
 	#printInStringOrder(1000)
 	
-	print getLongestCommonPrefixInSentence("abcd abcdef abcdxxx abcdeee")
+	#print getLongestCommonPrefixInSentence("abcd abcdef abcdxxx abcdeee")
+
+	count = 0
+	for i in lehmerRandomNumber(0, 13, 1, 16):
+		print i
+		count += 1
+		if count > 5: 
+			break
 	

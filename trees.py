@@ -30,9 +30,11 @@ class BstIterator(object):
 		return ret
 
 	def _pop_stack(self):
-		tmp = self.stack[len(self.stack) - 1]
-		del(self.stack[len(self.stack) - 1])
-		return tmp
+		if len(self.stack):
+			tmp = self.stack[len(self.stack) - 1]
+			del(self.stack[len(self.stack) - 1])
+			return tmp
+		return None
 
 	def _push_stack(self, item):
 		self.stack.append(item)
