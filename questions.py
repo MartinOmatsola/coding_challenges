@@ -1,4 +1,4 @@
-import sys
+import sys, math
 
 def longestWordFromChars(wrds, chars):
 	charMap = {}
@@ -169,17 +169,132 @@ def nWayMerge(arr):
 			curIndexes[minimum[1]] += 1
 
 	return output
-	
+
+def lcm(lst):
+	acc = 1
+	allDone = False
+	for i in lst:
+		if allDone:
+			break
+		if i == 1:
+			continue
+		done = False
+		while not done:
+			tmp = filter(lambda x: x % i == 0, lst)
+			if len(tmp) == 0:
+				done = True
+				continue
+			acc *= i
+			lst = [x / i if x % i == 0 else x for x in lst]
+			tmp = filter(lambda x: x != 1, lst)
+			if len(tmp) == 0:
+				allDone = True
+
+	return acc
+
+def getPrimes():
+	start = 2
+	yield start
+
+	while True:
+		isPrime = True
+		start += 1
+		for i in xrange(2, int(math.sqrt(start)) + 1):
+			if start % i == 0:
+				isPrime = False
+
+		if isPrime:
+			yield start
+
+def normalize_path(path, sep='/'):
+	files = path.split(sep)
+	acc = []
+
+	for f in files:
+		if f == '.': 
+			continue
+		elif f == '..':
+			prev_index = len(acc) - 1
+			if prev_index >= 0:
+				del(acc[prev_index])
+				continue
+
+		acc.append(f)
+
+	return sep.join(acc)
+
+def increment_array(array):
+	acc = 1
+	count = len(array)
+	i = count - 1
+	while i >= 0:
+		mult = (10 ** (count - i - 1)) * int(array[i])
+		acc += mult
+		i -= 1
+
+	return list(str(acc))
+
+def to_decimal(val, base=2):
+	acc = 0
+	chars = list(val)
+	count = len(chars)
+	i = count - 1
+	while i >= 0:
+		mult = (base ** (count - i - 1)) * int(chars[i])
+		acc += mult
+		i -= 1
+
+	return acc
+
+def is_power_of_two(d):
+	while d > 2:
+		d = d / 2
+		if d % 2 != 0:
+			return False
+	return True
+
+def is_anagram(s1, s2):
+	h1 = {}
+	h2 = {}
+	for c in s1:
+		if not h1.has_key(c):
+			h1[c] = 0
+		h1[c] += 1
+
+	for c in s2:
+		if not h2.has_key(c):
+			h2[c] = 0
+		h2[c] += 1
+
+	if len(h1) != len(h2):
+		return False
+
+	for k,v in h1.iteritems():
+		if v != h2.get(k):
+			return False
+
+	return True
+
 	
 if __name__ == "__main__":
 
-	sortedLists = [
-		[1, 2, 3, 4, 5],
-		[6, 7, 8, 8, 9, 10],
-		[11, 12, 13, 14, 15, 16, 16]
-	]
+	count = 0
+	for p in getPrimes():
+		print p
+		count += 1
+		if count == 10001:
+			break
 
-	print nWayMerge(sortedLists)
+	# print lcm([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+
+	# sortedLists = [
+	# 	[1, 2, 3, 4, 5],
+	# 	[6, 7, 8, 8, 9, 10],
+	# 	[11, 12, 13, 14, 15, 16, 16],
+	# 	[1, 2, 3, 4, 5],
+	# ]
+
+	# print nWayMerge(sortedLists)
 
 
 	# arr = [4 , 0 , 2, 10, 0, 4, 3]
