@@ -119,9 +119,74 @@ def lehmerRandomNumber(seed, a, c, m):
 		yield num
 		seed = num
 
+def bucket_sort(arr, upper_bound):
+	bucket = [0] * (upper_bound + 1)
+	for i in arr:
+		bucket[i] += 1
+
+	sorted_arr = []
+	for i in xrange(0, upper_bound + 1):
+		for j in xrange(bucket[i]):
+			sorted_arr.append(i)
+
+	return sorted_arr
+
+def atoi(chars):
+	chars = list(chars)
+	count = len(chars)
+	i = count - 1
+
+	acc = 0
+	while i >= 0: 
+		acc += (ord(chars[i]) - ord('0')) * (10 ** (count - i - 1))
+		i -= 1
+
+	return acc
+
+def nWayMerge(arr):
+	"""
+	Merge a list on n sorted lists into a single sorted list
+	"""
+
+	numLists = len(arr)
+	curIndexes = [0] * numLists
+	output = []
+
+	done = False
+	while not done:
+		done = True
+		minimum = (sys.maxint, -1)
+
+		for i in xrange(0, numLists):
+			if curIndexes[i] < len(arr[i]):
+				done = False
+				curElem = arr[i][curIndexes[i]]
+				if curElem <= minimum[0]:
+					minimum = (curElem, i)
+
+		if minimum[1] != -1:
+			output.append(minimum[0])
+			curIndexes[minimum[1]] += 1
+
+	return output
 	
 	
 if __name__ == "__main__":
+
+	sortedLists = [
+		[1, 2, 3, 4, 5],
+		[6, 7, 8, 8, 9, 10],
+		[11, 12, 13, 14, 15, 16, 16]
+	]
+
+	print nWayMerge(sortedLists)
+
+
+	# arr = [4 , 0 , 2, 10, 0, 4, 3]
+	# sorted_arr = bucket_sort(arr, 10)
+	# print sorted_arr
+
+
 	#wrds = ["abc", "baa", "caan", "an", "banc"]
 	#chars = ["a", "n", "c", "b"]
 	#print(longestWordFromChars(wrds, chars))
@@ -135,10 +200,10 @@ if __name__ == "__main__":
 	
 	#print getLongestCommonPrefixInSentence("abcd abcdef abcdxxx abcdeee")
 
-	count = 0
-	for i in lehmerRandomNumber(0, 13, 1, 16):
-		print i
-		count += 1
-		if count > 5: 
-			break
-	
+	# count = 0
+	# for i in lehmerRandomNumber(0, 13, 1, 16):
+	# 	print i
+	# 	count += 1
+	# 	if count > 5: 
+	# 		break
+	# 
