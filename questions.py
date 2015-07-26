@@ -1,4 +1,5 @@
 import sys, math
+from collections import deque
 
 def longestWordFromChars(wrds, chars):
     charMap = {}
@@ -306,7 +307,7 @@ def traverseSuffixTree3(node):
     rootChar = node.value
     while len(queue):
         curNode = queue[len(queue)-1]
-        queue = queue[0:len(queue)-1]
+        del(queue[len(queue)-1])
         acc.append(curNode.value)
         if curNode.nodeList:
             for n in curNode.nodeList:
@@ -337,19 +338,128 @@ def traverseSuffixTree(c, root, acc=None):
     
     return res
 
+def genSurpasserList(lst):
+    count = len(lst)
+    ret = [0] * count
+    for i in xrange(0, count-1):
+        numGt = 0
+        for j in xrange(i+1, count):
+            if lst[j] > lst[i]:
+                numGt += 1
+        ret[i] = numGt
+
+    return ret
+
+def getShortestSubsequence(s, lst):
+    if not s or not len(lst):
+        return ""
+
+    startIndexes = []
+    endIndexes = []
+    startWord = lst[0]
+    endWord = lst[len(lst) - 1]
+    words = s.split(" ")
+
+    # store indexes of start and end of sequence
+    for i in xrange(0, len(words)):
+        if words[i] == startWord:
+            startIndexes.append(i)
+        elif words[i] == endWord:
+            endIndexes.append(i)
+
+    shortestSubsequence = []
+    subsequenceExists =  False
+    for i in startIndexes:
+        for j in endIndexes:
+            if j > i:
+                curIndex = 1
+
+                # look in possible range for candidates
+                for k in xrange(i + 1, j):
+                    if curIndex >= len(lst):
+                        break
+                    if words[k] == lst[curIndex]:
+                        curIndex += 1
+
+                if curIndex >= len(lst) - 1:
+                    candidate = words[i:j+1]
+                    if subsequenceExists:
+                        shortestSubsequence = candidate if len(candidate) < len(shortestSubsequence) \
+                                                else shortestSubsequence
+                        subsequenceExists = True
+                    else:
+                        shortestSubsequence = candidate
+
+    return " ".join(shortestSubsequence)
+
+
+
+def sumUpToExists(n, lst):
+    hash = {}
+    for i in lst:
+        if not hash.has_key(i):
+            hash[i] = 1
+        else:
+            hash[i] += 1
+
+    for i in lst:
+        k = n - i
+
+        if not hash.has_key(k):
+            continue
+
+        if k == (n / 2):
+            if hash[k] > 1:
+                return True
+        elif hash[k]:
+            return True
+
+    return False
+
+def maxSubArraySum(arr):
+    allNegative = filter(lambda x: x >= 0, arr)
+    if len(arr) == 0:
+        return max(arr)
+
+    globMax = 0
+    localMax = 0
+    for i in xrange(0, len(arr)):
+        tmp = localMax + arr[i]
+        if tmp > 0:
+            localMax += arr[i]
+        else:
+            localMax = 0
+        if localMax > globMax:
+            globMax = localMax
+
+    return globMax    
+
     
 if __name__ == "__main__":
 
-    s = SNode('s', None)
-    o = SNode('o', [s])
-    m = SNode('m', [o])
-    e2 = SNode('e', None)
-    c = SNode('c', [e2])
-    e = SNode('e', None)
-    b = SNode('b', [e])
-    a = SNode('a', [b, c, m])
+    print maxSubArraySum([1, -3, 2, -5, 7, 6, -1, -4, 11, -23])
 
-    print traverseSuffixTree3(a)
+    # print sumUpToExists(8, [5, 1, 2, 4])
+
+    # sentence = """
+    # One Ring to rule them all, One Ring to find them, One Ring to bring them all find them, all and in the darkness bind them"
+    # """
+    # words = ["find", "them,", "all"]
+    # candidate = getShortestSubsequence(sentence, words)
+    # print candidate
+
+    # print genSurpasserList([2, 7, 5, 5, 2, 7, 0, 8, 1])
+
+    # s = SNode('s', None)
+    # o = SNode('o', [s])
+    # m = SNode('m', [o])
+    # e2 = SNode('e', None)
+    # c = SNode('c', [e2])
+    # e = SNode('e', None)
+    # b = SNode('b', [e])
+    # a = SNode('a', [b, c, m])
+
+    # print traverseSuffixTree3(a)
 
     # suffixTree = {
     #               'a' : {
