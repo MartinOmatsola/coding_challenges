@@ -432,12 +432,85 @@ def maxSubArraySum(arr):
         if localMax > globMax:
             globMax = localMax
 
-    return globMax    
+    return globMax
 
+def decodeNumber(num):
+    solutions = []
+
+    num = str(num)
+    count = len(num)
+
+    for i in xrange(0, count - 1):
+        tmp = []
+        for j in xrange(0, i):
+            tmp.append(num[j])
+
+        start = i
+        for j in xrange(i, count - 2, 2):
+            s = num[j:j+2]
+            tmp.append(s)
+            start += 2
+
+        for j in xrange(start, count):
+            tmp.append(num[j])
+
+        isSolution = True
+        decoded = []
+        for val in tmp:
+            val = int(val)
+            asciiDigit = val + ord('A') - 1
+            if (asciiDigit < ord('A')) or  (asciiDigit > ord('Z')):
+                isSolution = False
+                break
+
+            decoded.append(chr(asciiDigit)) 
+        print tmp
+        if isSolution:
+            solutions.append("".join(decoded))
+
+    return solutions
+
+def permutations(lst):
+    if len(lst) == 0:
+        return []
+    elif len(lst) == 1:
+        return [lst]
+    else:
+        res = []
+        for i in xrange(len(lst)):
+            x = lst[i]
+            xs = lst[:i] + lst[i+1:]
+
+            for p in permutations(xs):
+                res.append([x] + p)
+
+    return res
+
+def convertToBinary(num):
+    res = [] 
+    while (num > 0):
+        res.append(str(num % 2))
+        num = num / 2
+    res.reverse()
+    return "".join(res)
+
+def recReverse(lst):
+    if len(lst) == 0:
+        return [lst]
+    elif len(lst) == 1:
+        return [lst[0]]
+    else:
+        return recReverse(lst[1:]) + [lst[0]]
     
 if __name__ == "__main__":
 
-    print maxSubArraySum([1, -3, 2, -5, 7, 6, -1, -4, 11, -23])
+    print recReverse([1, 2, 3, 4])
+
+    # print convertToBinary(216)
+
+    # print permutations(list("abc"))
+
+    # print maxSubArraySum([1, -3, 2, -5, 7, 6, -1, -4, 11, -23])
 
     # print sumUpToExists(8, [5, 1, 2, 4])
 
